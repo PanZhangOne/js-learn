@@ -12,6 +12,13 @@
  * 在JS中使用`extends`关键字进行继承操作，其语法为`class Child extends Parent`
  * 在继承后`Child`实例化后的对象继承`Parent`的属性和方法
  * `Child.prototype.[[Prototype]] = Parent.prototype`
+ * 
+ * ** instanceof **
+ * 
+ * `instanceof` 用于检查一个对象是否属于某个特定的class或者父类型
+ * 
+ * - `instanceof` 会沿着对象的原型链一直向上查找，如果找到与匹配的`Class.prototype`相匹配返回`true`否则返回`false`
+ * - 通过给类设置[Symbol.hasInstance]方法来自定义`instanceof`检查规则
  */
 
 class User {
@@ -98,3 +105,37 @@ rabbit.hide();
 
 console.log(`Rabbit.prototype.[[Prototype]] = ${Rabbit.prototype.__proto__}`);
 console.log(`Rabbit.prototype.[[Prototype]] === Animal.prototype ? ${Rabbit.prototype.__proto__ === Animal.prototype}`);
+
+
+console.log('--------------------------------------------');
+
+class CoffeeMachine {
+    #waterAmount = 0;
+
+    get waterAmount() {
+        return this.#waterAmount;
+    }
+
+    set waterAmount(val) {
+        if (val < 0) {
+            throw new Error('Negative water');
+        }
+        this.#waterAmount = val;
+    }
+}
+
+let machine = new CoffeeMachine();
+machine.waterAmount = 2;
+
+
+console.log('--------------------------------------------');
+
+class Person {
+    static [Symbol.hasInstance] (obj) {
+        if (obj.canEat) return true
+    }
+}
+
+let obj = {canEat: true}
+
+console.log(obj instanceof Person);
